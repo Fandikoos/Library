@@ -42,13 +42,13 @@ public class CustomerService {
         customerRespository.delete(customer);
     }
 
-    public Customer modifyCustomer(Customer newCustomer, long customerId) {
+    public Customer modifyCustomer(Customer actualCustomer, long customerId) {
         Optional<Customer> customer = customerRespository.findById(customerId);
         if (customer.isPresent()) {
             Customer existingCustomer = customer.get();
-            existingCustomer.setName(newCustomer.getName());
-            existingCustomer.setEmail(newCustomer.getEmail());
-            existingCustomer.setPartner(newCustomer.isPartner());
+            existingCustomer.setName(actualCustomer.getName());
+            existingCustomer.setEmail(actualCustomer.getEmail());
+            existingCustomer.setPartner(actualCustomer.isPartner());
             return customerRespository.save(existingCustomer);
         } else {
             throw new RuntimeException("Customer not found");
