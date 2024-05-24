@@ -1,5 +1,6 @@
 package com.fandos.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,8 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    // Para que no se haga un bucle infinito en Postman
+    @JsonBackReference
     private Author author;
 
 }
