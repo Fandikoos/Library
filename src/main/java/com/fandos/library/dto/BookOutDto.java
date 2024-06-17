@@ -15,5 +15,7 @@ public class BookOutDto {
     private String title;
     private String genre;
     private LocalDate publicationDate;
+    private int numberOfPages;
+    private boolean inStock;
     private Long authorId;  // Para mostrar el nombre del autor en la respuesta
 }

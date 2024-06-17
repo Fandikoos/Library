@@ -18,5 +18,6 @@ public class AuthorOutDto {
     private String nationality;
     private LocalDate bornDate;
     private String biography;
+    private boolean active;
     private List<String> bookTitles; // O List<BookDto> si prefieres incluir detalles de los libros
 }

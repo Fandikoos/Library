@@ -60,6 +60,7 @@ public class AuthorService {
             existingAuthor.setName(actualAuthor.getName());
             existingAuthor.setNationality(actualAuthor.getNationality());
             existingAuthor.setBiography(actualAuthor.getBiography());
+            existingAuthor.setActive(actualAuthor.isActive());
             return authorRespository.save(existingAuthor);
         } else {
             throw new RuntimeException("Customer not found");

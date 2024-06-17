@@ -23,6 +23,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> findByGenre(String genre){
+        return bookRepository.findByGenre(genre);
+    }
+
     public BookOutDto saveBook (BookInDto bookInDto){
         Book book = new Book();
         modelMapper.map(bookInDto, book);
@@ -48,6 +52,8 @@ public class BookService {
             existingBook.setTitle(actualBook.getTitle());
             existingBook.setGenre(actualBook.getGenre());
             existingBook.setPublicationDate(actualBook.getPublicationDate());
+            existingBook.setNumberOfPages(actualBook.getNumberOfPages());
+            existingBook.setInStock(actualBook.isInStock());
             existingBook.setAuthor(actualBook.getAuthor());
             return bookRepository.save(existingBook);
         } else {

@@ -27,6 +27,9 @@ public class Author {
     private LocalDate bornDate;
     @Column
     private String biography;
+    @Column
+    private boolean active;
+
 
     @OneToMany(mappedBy = "author")
     // Para que no se haga un bucle infitio en la respuesta como en Postman

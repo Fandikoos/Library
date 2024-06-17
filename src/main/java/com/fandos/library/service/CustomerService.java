@@ -49,6 +49,8 @@ public class CustomerService {
             existingCustomer.setName(actualCustomer.getName());
             existingCustomer.setEmail(actualCustomer.getEmail());
             existingCustomer.setPartner(actualCustomer.isPartner());
+            existingCustomer.setAddress(actualCustomer.getAddress());
+            existingCustomer.setActive(actualCustomer.isActive());
             return customerRespository.save(existingCustomer);
         } else {
             throw new RuntimeException("Customer not found");

@@ -20,5 +20,6 @@ public class AuthorInDto {
     @NotNull(message = "Es obligatorio establecer el nombre")
     private LocalDate bornDate;
     private String biography;
+    private boolean active;
 
 }
