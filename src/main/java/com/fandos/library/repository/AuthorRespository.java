@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AuthorRespository extends CrudRepository<Author, Long> {
     List<Author> findAll();
+
 }

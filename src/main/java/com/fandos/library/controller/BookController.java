@@ -23,6 +23,11 @@ public class BookController {
         return new ResponseEntity<>(bookService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/books/genre/{genre}")
+    public ResponseEntity<List<Book>> getByGenre(@PathVariable String genre){
+        return new ResponseEntity<>(bookService.findByGenre(genre), HttpStatus.OK);
+    }
+
     @PostMapping("/books")
     public ResponseEntity<BookOutDto> saveBook(@Valid @RequestBody BookInDto bookInDto){
         BookOutDto newBook = bookService.saveBook(bookInDto);

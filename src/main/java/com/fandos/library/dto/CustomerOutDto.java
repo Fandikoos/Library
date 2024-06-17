@@ -16,4 +16,6 @@ public class CustomerOutDto {
     private String email;
     private LocalDate registerDate;
     private boolean partner;
+    private String address;
+    private boolean active;
 }

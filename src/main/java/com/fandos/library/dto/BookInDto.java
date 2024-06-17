@@ -21,6 +21,10 @@ public class BookInDto {
     @NotNull(message = "La fecha de publicación es obligatoria")
     private LocalDate publicationDate;
 
+    private int numberOfPages;
+
+    private boolean inStock;
+
     @NotNull(message = "El ID del autor es obligatorio")
     private Long authorId;
 }

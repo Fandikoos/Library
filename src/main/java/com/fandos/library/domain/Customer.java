@@ -25,4 +25,8 @@ public class Customer {
     private LocalDate registerDate;
     @Column
     private boolean partner;
+    @Column
+    private String address;
+    @Column
+    private boolean active;
 }
