@@ -1,5 +1,6 @@
 package com.fandos.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +27,12 @@ public class Author {
     private LocalDate bornDate;
     @Column
     private String biography;
+    @Column
+    private boolean active;
+
 
     @OneToMany(mappedBy = "author")
+    // Para que no se haga un bucle infitio en la respuesta como en Postman
+    @JsonManagedReference
     private List<Book> books;
 }

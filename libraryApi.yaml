@@ -1,0 +1,733 @@
+openapi: 3.0.1
+info:
+  title: Library API
+  description: API para la gestión de librerías
+  version: 1.0.0
+servers:
+  - url: 'https://api.library.com'
+tags:
+  - name: Book
+    description: Operaciones para gestionar los libros
+  - name: Author
+    description: Operaciones para gestionar lus autores de los libros
+  - name: Customer
+    description: Operaciones para gestionar los Clientes de la librería
+paths:
+  /books:
+    get:
+      tags:
+        - Book
+      summary: Listado de libros.
+      description: Esta operación permite consultar el listado completo de libros con toda su información.
+      responses:
+        '200':
+          description: Devuelve la lista completa de libros registradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookOut'
+              examples:
+                shop1:
+                  value:
+                    id: 1
+                    name: Libro 1
+                    genre: Comedia
+                    publicationDate: 2020-05-18
+
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - Book
+      summary: Registrar una nuevo libro
+      operationId: postBook
+      requestBody:
+        description: Información del nuevo libro
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookIn'
+            examples:
+              shop1:
+                value:
+                  name: Libro1
+                  genre: Comedia
+                  publicationDate: 2020-05-18
+
+      responses:
+        '201':
+          description: Libro registrad0 correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookOut'
+              examples:
+                shop1:
+                  value:
+                    id: 1
+                    name: Libro1
+                    genre: Comedia
+                    publicationDate: 2020-05-18
+                    
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+                
+  /book/{bookId}:
+    get:
+      tags:
+        - Book
+      summary: Buscar un libro por su Id
+      operationId: searchBook
+      parameters:
+        - name: bookId
+          in: path
+          description: Identificador del libro
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Devuelve el libro en función de su identificador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookOut'
+              examples:
+                shop1:
+                  value:
+                    id: 1
+                    name: Libro1
+                    genre: Comedia
+                    publicationDate: 2020-05-18
+                    
+        '404':
+          description: No se ha encontrado el libro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar este libro"
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          
+    delete:
+      tags:
+        - Book
+      summary: Eliminar un libro
+      operationId: deleteBook
+      parameters:
+        - name: bookId
+          in: path
+          description: Identificador del libro
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: No se ha encontrado el libro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar esta libro"
+        '400':
+          description: Bad Request
+
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - Book
+      summary: Modifica un libro
+      description: Modifica los datos de un libro concreta
+      operationId: modifyBook
+      parameters:
+        - name: bookId
+          in: path
+          description: Identificador del libro
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 1
+      requestBody:
+        description: Datos del libro actualizados correctamente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookIn'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookOut'
+              examples:
+                shop1:
+                  value:
+                    id: 1
+                    name: Libro1
+                    genre: Comedia
+                    publicationDate: 2020-05-18
+                    
+        '404':
+          description: No se ha encontrado este libro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar el libro"
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    
+
+  /author:
+    get:
+      tags:
+        - Author
+      summary: Listado de autores
+      description: Esta operación permite consultar el listado completo de autores con toda su información.
+      responses:
+        '200':
+          description: Devuelve la lista completa de autores registrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorOut'
+              examples:
+                section1:
+                  value:
+                    - id: 2
+                      name: Gabriel Garcia Marquez
+                      nationality: Colombian
+                      bornDate: '1927-03-06'
+                      biography: A renowned author known for magical realism.
+                      books:
+                        - id: 1
+                          title: Geronimo Stilton
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 33
+                          title: Geronimo Stilton parte 2
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 65
+                          title: Aventuralandia
+                          genre: Terror
+                          publicationDate: '2019-04-10'
+                    
+                      
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - Author
+      summary: Registrar un nuevo autor
+      operationId: postAuthor
+      requestBody:
+        description: Información del nuevo autor
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorIn'
+      responses:
+        '201':
+          description: Autor registrada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorOut'
+              examples:
+                author1:
+                  value:
+                    - id: 2
+                      name: Gabriel Garcia Marquez
+                      nationality: Colombian
+                      bornDate: '1927-03-06'
+                      biography: A renowned author known for magical realism.
+                      books:
+                        - id: 1
+                          title: Geronimo Stilton
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 33
+                          title: Geronimo Stilton parte 2
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 65
+                          title: Aventuralandia
+                          genre: Terror
+                          publicationDate: '2019-04-10'
+                    
+
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+                
+  /author/{authorId}:
+    delete:
+      tags:
+        - Author
+      summary: Dar de baja un autor
+      operationId: deleteAuthor
+      parameters:
+        - name: authorId
+          in: path
+          description: Identificador del autor
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 1
+      responses:
+        '204':
+          description: Ok
+        '404':
+          description: No se ha encontrado el autor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar esta autor"
+        '400':
+          description: Bad Request
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - Author
+      summary: Modifica un autor
+      description: Modifica los datos de un autor
+      operationId: modifyAuthor
+      parameters:
+        - name: authorId
+          in: path
+          description: Identificador del autor
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 1
+      requestBody:
+        description: Datos del autor actualizados
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorIn'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorOut'
+              examples:
+                author1:
+                  value:
+                    - id: 2
+                      name: Gabriel Garcia Marquez
+                      nationality: Colombian
+                      bornDate: '1927-03-06'
+                      biography: A renowned author known for magical realism.
+                      books:
+                        - id: 1
+                          title: Geronimo Stilton
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 33
+                          title: Geronimo Stilton parte 2
+                          genre: Comedia
+                          publicationDate: '2019-04-10'
+                        - id: 65
+                          title: Aventuralandia
+                          genre: Terror
+                          publicationDate: '2019-04-10'
+                    
+        '404':
+          description: No se ha encontrado este autor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar el autor"
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Listado de clientes.
+      description: Esta operación permite consultar el listado completo de clientes con toda su información.
+      responses:
+        '200':
+          description: Devuelve la lista completa de clientes registrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerOut'
+              examples:
+                customer1:
+                  value:
+                    - id: 2
+                      name: Julian
+                      email: ashdasbhads@gmail.com
+                      registerDate: '2024-05-24'
+                      partner: true
+
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - Customer
+      summary: Registrar un nuevo cliente
+      operationId: postCustomer
+      requestBody:
+        description: Información del nuevo cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerIn'
+      responses:
+        '201':
+          description: Cliente registrado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerOut'
+              examples:
+                customer1:
+                  value:
+                    - id: 2
+                      name: Julian
+                      email: ashdasbhads@gmail.com
+                      registerDate: '2024-05-24'
+                      partner: true
+                    
+
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+                
+  /customer/{customerId}:
+    get:
+      tags:
+        - Customer
+      summary: Buscar un cliente por su identificador
+      operationId: searchCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador del cliente
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 2
+      responses:
+        '200':
+          description: Devuelve el cliente según el identificador
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerOut'
+              examples:
+                customer1:
+                  value:
+                    - id: 2
+                      name: Julian
+                      email: ashdasbhads@gmail.com
+                      registerDate: '2024-05-24'
+                      partner: true
+                    
+
+                      
+        '404':
+          description: No se ha encontrado el cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar este cliente"
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        
+    delete:
+      tags:
+        - Customer
+      summary: Dar de baja un cliente
+      operationId: deleteCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador del cliente
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 1
+      responses:
+        '204':
+          description: Ok
+        '404':
+          description: No se ha encontrado el cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar este cliente"
+        '400':
+          description: Bad Request
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - Customer
+      summary: Modifica un cliente
+      description: Modifica los datos de un cliente concreto
+      operationId: modifyCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador del cliente
+          required: true
+          schema:
+            type: number
+            format: int32
+            example: 1
+      requestBody:
+        description: Datos del cliente actualizados
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerIn'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerOut'
+              examples:
+                product1:
+                  value:
+                    - id: 2
+                      name: Julian
+                      email: ashdasbhads@gmail.com
+                      registerDate: '2024-05-24'
+                      partner: true
+                    
+        '404':
+          description: No se ha encontrado este cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 404
+                message: "No se ha podido encontrar este cliente"
+        '500':
+          description: Error interno en el servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    
+
+components:
+  schemas:
+    AuthorIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Gabriel García Márquez
+        nationality:
+          type: string
+          example: Argentino
+        bornDate:
+          type: string
+          example: 1964-02-20
+        biography:
+          type: string
+          example: Escritor caracterizado por sus comedias
+        book:
+          type: array  
+          items:       
+            type: integer
+            example: 1
+          example: [1] 
+        
+    AuthorOut:
+      type: object
+      properties:
+        sectionId:
+          type: number
+          format: int32
+          example: 1
+      allOf:
+        - $ref: '#/components/schemas/AuthorIn'
+    CustomerIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Daniel
+        email:
+          type: string
+          example: danfannsa@gmail.com
+        registrationDate:
+          type: string
+          example: 2024-05-18
+        partner:
+          type: boolean
+          example: true
+
+    CustomerOut:
+      type: object
+      properties:
+        productId:
+          type: number
+          format: int32
+          example: 1
+      allOf:
+        - $ref: '#/components/schemas/CustomerIn'
+    BookIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Libro1
+        genre:
+          type: string
+          example: Comedia
+        publicationDate:
+          type: string
+          example: 20-05-2010
+    BookOut:
+      type: object
+      properties:
+        bookId:
+          type: number
+          format: int32
+          example: 1
+      allOf:
+        - $ref: '#/components/schemas/BookIn'
+    ErrorResponse:
+      properties:
+        internalError:
+          type: number
+          format: int32
+        message:
+          type: string
+      type: object
+    ResourceNotFound:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/ErrorResponse'
+    BadRequestError:
+      type: object
+      properties:
+        internalError:
+          type: number
+          format: int32
+          example: 400
+        message:
+          type: string
+          example: "Bad Request"
+    InternalServerError:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      example:
+        internalError: 500
+        message: "Internal Server Error"
